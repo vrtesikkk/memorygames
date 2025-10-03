@@ -41,7 +41,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            z-index: -2;
             background: var(--gradient);
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
@@ -66,16 +66,32 @@
 
         .particle {
             position: absolute;
-            background: rgba(255,255,255,0.1);
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.1) 70%, transparent 100%);
             border-radius: 50%;
             animation: float 20s infinite linear;
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
         }
 
         @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+            0% { 
+                transform: translateY(100vh) rotate(0deg) scale(0.5); 
+                opacity: 0; 
+            }
+            10% { 
+                opacity: 1; 
+                transform: translateY(90vh) rotate(36deg) scale(1);
+            }
+            50% {
+                transform: translateY(50vh) rotate(180deg) scale(1.2);
+            }
+            90% { 
+                opacity: 1; 
+                transform: translateY(10vh) rotate(324deg) scale(0.8);
+            }
+            100% { 
+                transform: translateY(-100vh) rotate(360deg) scale(0.3); 
+                opacity: 0; 
+            }
         }
 
         .container {
@@ -91,30 +107,42 @@
             margin-bottom: 50px;
             color: white;
             position: relative;
+            z-index: 10;
         }
 
         .header h1 {
             font-size: 3.5rem;
             font-weight: 800;
             margin-bottom: 15px;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            background: linear-gradient(45deg, #fff, #f0f9ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: titleGlow 3s ease-in-out infinite alternate;
+            color: #1f2937;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            animation: titlePulse 2s ease-in-out infinite alternate;
+            position: relative;
         }
 
-        @keyframes titleGlow {
-            0% { filter: drop-shadow(0 0 20px rgba(255,255,255,0.3)); }
-            100% { filter: drop-shadow(0 0 30px rgba(255,255,255,0.6)); }
+        @keyframes titlePulse {
+            0% { 
+                transform: scale(1);
+                text-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            100% { 
+                transform: scale(1.02);
+                text-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            }
         }
 
         .header p {
             font-size: 1.4rem;
-            opacity: 0.95;
+            opacity: 0.8;
             font-weight: 300;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            color: #374151;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            animation: subtitleFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes subtitleFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
         }
 
         .stats-bar {
@@ -134,12 +162,30 @@
             color: white;
             text-align: center;
             border: 1px solid rgba(255,255,255,0.2);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .stat-item:hover::before {
+            left: 100%;
         }
 
         .stat-item:hover {
-            transform: translateY(-5px);
+            transform: translateY(-6px) scale(1.02);
             background: rgba(255,255,255,0.25);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
         }
 
         .stat-value {
@@ -168,7 +214,7 @@
             padding: 35px;
             text-align: center;
             box-shadow: var(--shadow);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
             border: 1px solid rgba(255,255,255,0.3);
             position: relative;
@@ -182,8 +228,8 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.5s;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            transition: left 0.6s;
         }
 
         .game-card:hover::before {
@@ -191,9 +237,13 @@
         }
 
         .game-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
             border-color: var(--primary);
+        }
+
+        .game-card:active {
+            transform: translateY(-5px) scale(0.98);
         }
 
         .game-card:nth-child(1) { border-left: 4px solid #6366f1; }
@@ -206,14 +256,22 @@
             font-size: 4.5rem;
             margin-bottom: 25px;
             display: block;
-            animation: bounce 2s infinite;
+            animation: iconFloat 3s ease-in-out infinite;
             filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+            transition: all 0.3s ease;
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
+        .game-card:hover .game-icon {
+            transform: scale(1.1);
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { 
+                transform: translateY(0px); 
+            }
+            50% { 
+                transform: translateY(-5px); 
+            }
         }
 
         .game-title {
@@ -244,11 +302,24 @@
 
         .game-screen {
             display: none;
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             min-height: 500px;
+            border: 1px solid rgba(255,255,255,0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #f59e0b, #10b981, #ef4444);
         }
 
         .game-screen.active {
@@ -256,43 +327,66 @@
         }
 
         .back-btn {
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
             padding: 12px 24px;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 1rem;
-            margin-bottom: 20px;
-            transition: background 0.3s ease;
+            font-weight: 600;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .back-btn:hover {
-            background: #5a6fd8;
+            background: linear-gradient(135deg, #5a6fd8, #6b46c1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
 
         .game-title-screen {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 30px;
             text-align: center;
-            color: #333;
+            color: #1f2937;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .game-title-screen::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            border-radius: 2px;
         }
 
         .start-btn {
-            background: #4CAF50;
+            background: linear-gradient(135deg, #10b981, #059669);
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
+            padding: 16px 32px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 1.2rem;
-            margin: 20px auto;
+            font-weight: 600;
+            margin: 30px auto;
             display: block;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
         }
 
         .start-btn:hover {
-            background: #45a049;
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
         }
 
         .start-btn:disabled {
@@ -302,9 +396,15 @@
 
         .score {
             text-align: center;
-            font-size: 1.2rem;
-            margin: 20px 0;
-            color: #333;
+            font-size: 1.3rem;
+            margin: 25px 0;
+            color: #1f2937;
+            font-weight: 600;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            padding: 15px 25px;
+            border-radius: 12px;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .game-area {
@@ -320,34 +420,42 @@
         .card {
             width: 80px;
             height: 80px;
-            background: #f0f0f0;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+            background: linear-gradient(135deg, #ffffff, #f8fafc);
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2rem;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .card:hover {
             border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .card.flipped {
-            background: white;
-            border-color: #4CAF50;
+            background: linear-gradient(135deg, #ffffff, #f0f9ff);
+            border-color: #10b981;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
         }
 
         .card.matched {
-            background: #4CAF50;
+            background: linear-gradient(135deg, #10b981, #059669);
             color: white;
+            border-color: #047857;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
         .card.wrong {
-            background: #f44336;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
             color: white;
+            border-color: #b91c1c;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
         }
 
         .input-area {
@@ -357,53 +465,75 @@
 
         .sequence-input {
             font-size: 1.5rem;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
             text-align: center;
             margin: 10px;
+            background: linear-gradient(135deg, #ffffff, #f8fafc);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .sequence-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
         }
 
         .submit-btn {
-            background: #2196F3;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 12px 24px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 1rem;
+            font-weight: 600;
             margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
         }
 
         .submit-btn:hover {
-            background: #1976D2;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
         }
 
         .timer {
             text-align: center;
-            font-size: 1.5rem;
-            margin: 20px 0;
-            color: #e74c3c;
+            font-size: 1.6rem;
+            margin: 25px 0;
+            color: #ef4444;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            padding: 15px 25px;
+            border-radius: 12px;
+            border: 2px solid #fecaca;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
         }
 
         .result {
             text-align: center;
-            font-size: 1.2rem;
-            margin: 20px 0;
-            padding: 15px;
-            border-radius: 8px;
+            font-size: 1.3rem;
+            margin: 25px 0;
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .result.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border: 2px solid #6ee7b7;
         }
 
         .result.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #991b1b;
+            border: 2px solid #f87171;
         }
 
         .difficulty-selector {
@@ -412,22 +542,27 @@
         }
 
         .difficulty-btn {
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 5px;
+            padding: 10px 20px;
+            border-radius: 10px;
             cursor: pointer;
-            margin: 5px;
-            transition: background 0.3s ease;
+            margin: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
         }
 
         .difficulty-btn:hover {
-            background: #5a6fd8;
+            background: linear-gradient(135deg, #5a6fd8, #6b46c1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
         .difficulty-btn.active {
-            background: #4CAF50;
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
         .reaction-area {
@@ -502,23 +637,23 @@
             <div class="header">
                 <h1>🧠 Memory Master</h1>
                 <p>Boost your brainpower with fun memory training games</p>
-            </div>
+        </div>
 
             <div class="stats-bar">
                 <div class="stat-item">
                     <span class="stat-value" id="total-games">0</span>
                     <span class="stat-label">Games Played</span>
-                </div>
+                            </div>
                 <div class="stat-item">
                     <span class="stat-value" id="best-score">0</span>
                     <span class="stat-label">Best Score</span>
-                </div>
+                        </div>
                 <div class="stat-item">
                     <span class="stat-value" id="streak">0</span>
                     <span class="stat-label">Win Streak</span>
-                </div>
             </div>
-            
+        </div>
+
             <div class="game-grid">
                 <div class="game-card" onclick="showGame('reaction')">
                     <span class="game-icon">⚡</span>
@@ -539,14 +674,14 @@
                     <h3 class="game-title">Memory Pairs</h3>
                     <p class="game-description">Classic matching game! Find all pairs while improving your concentration</p>
                     <div class="difficulty-badge">Strategy</div>
-                </div>
+            </div>
                 
                 <div class="game-card" onclick="showGame('sequence')">
                     <span class="game-icon">🔢</span>
                     <h3 class="game-title">Number Sequences</h3>
                     <p class="game-description">Challenge your working memory with increasingly complex number patterns</p>
                     <div class="difficulty-badge">Progressive</div>
-                </div>
+        </div>
 
                 <div class="game-card" onclick="showGame('difference')">
                     <span class="game-icon">🔍</span>
@@ -575,12 +710,12 @@
                 <button class="difficulty-btn active" onclick="setPicturesDifficulty('easy')">Easy (4 items)</button>
                 <button class="difficulty-btn" onclick="setPicturesDifficulty('medium')">Medium (6 items)</button>
                 <button class="difficulty-btn" onclick="setPicturesDifficulty('hard')">Hard (8 items)</button>
-            </div>
+                    </div>
             <div class="score">Level: <span id="pictures-level">1</span></div>
             <div class="game-area" id="pictures-area"></div>
             <button class="start-btn" id="pictures-start-btn" onclick="startPicturesGame()">Start game</button>
-        </div>
-
+                </div>
+                
         <!-- Парочки -->
         <div id="pairs-game" class="game-screen">
             <button class="back-btn" onclick="showMainMenu()">← Back to menu</button>
@@ -601,8 +736,8 @@
                 <button class="submit-btn" onclick="checkSequence()">Check</button>
             </div>
             <button class="start-btn" id="sequence-start-btn" onclick="startSequenceGame()">Start game</button>
-        </div>
-                
+    </div>
+
         <!-- Найди отличие -->
         <div id="difference-game" class="game-screen">
             <button class="back-btn" onclick="showMainMenu()">← Back to menu</button>
@@ -656,13 +791,16 @@
         // Create floating particles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 30; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 particle.style.left = Math.random() * 100 + '%';
-                particle.style.width = particle.style.height = Math.random() * 4 + 2 + 'px';
+                const size = Math.random() * 6 + 3;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
                 particle.style.animationDelay = Math.random() * 20 + 's';
-                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                particle.style.animationDuration = (Math.random() * 15 + 20) + 's';
+                particle.style.opacity = Math.random() * 0.8 + 0.2;
                 particlesContainer.appendChild(particle);
             }
         }
