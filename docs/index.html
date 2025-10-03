@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Training Games</title>
+    <title>🧠 Memory Master - Brain Training Games</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -11,73 +12,234 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1f2937;
+            --light: #f8fafc;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --shadow: 0 20px 40px rgba(0,0,0,0.1);
+            --shadow-lg: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Poppins', sans-serif;
+            background: var(--gradient);
             min-height: 100vh;
-            color: #333;
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: var(--gradient);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
             color: white;
+            position: relative;
         }
 
         .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #fff, #f0f9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 20px rgba(255,255,255,0.3)); }
+            100% { filter: drop-shadow(0 0 30px rgba(255,255,255,0.6)); }
         }
 
         .header p {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
+            opacity: 0.95;
+            font-weight: 300;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.15);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px 25px;
+            color: white;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.25);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
             opacity: 0.9;
         }
 
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
         }
 
         .game-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
+            background: rgba(255,255,255,0.95);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 35px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--shadow);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .game-card:hover::before {
+            left: 100%;
         }
 
         .game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
         }
 
+        .game-card:nth-child(1) { border-left: 4px solid #6366f1; }
+        .game-card:nth-child(2) { border-left: 4px solid #8b5cf6; }
+        .game-card:nth-child(3) { border-left: 4px solid #f59e0b; }
+        .game-card:nth-child(4) { border-left: 4px solid #10b981; }
+        .game-card:nth-child(5) { border-left: 4px solid #ef4444; }
+
         .game-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
+            font-size: 4.5rem;
+            margin-bottom: 25px;
             display: block;
+            animation: bounce 2s infinite;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
         }
 
         .game-title {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
+            font-weight: 700;
             margin-bottom: 15px;
-            color: #333;
+            color: var(--dark);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .game-description {
-            color: #666;
-            line-height: 1.6;
+            color: #64748b;
+            line-height: 1.7;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 10px;
         }
 
         .game-screen {
@@ -331,43 +493,66 @@
     </style>
 </head>
 <body>
+    <div class="bg-animation"></div>
+    <div class="particles" id="particles"></div>
+    
     <div class="container">
         <!-- Main Menu -->
         <div id="main-menu" class="game-screen active">
             <div class="header">
-                <h1>🧠 Memory Training Games</h1>
-                <p>Choose a game to improve memory and attention</p>
+                <h1>🧠 Memory Master</h1>
+                <p>Boost your brainpower with fun memory training games</p>
+            </div>
+            
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-value" id="total-games">0</span>
+                    <span class="stat-label">Games Played</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="best-score">0</span>
+                    <span class="stat-label">Best Score</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="streak">0</span>
+                    <span class="stat-label">Win Streak</span>
+                </div>
             </div>
             
             <div class="game-grid">
                 <div class="game-card" onclick="showGame('reaction')">
                     <span class="game-icon">⚡</span>
-                    <h3 class="game-title">Reaction Game</h3>
-                    <p class="game-description">Click appearing targets as fast as you can in 60 seconds</p>
+                    <h3 class="game-title">Lightning Reflexes</h3>
+                    <p class="game-description">Test your reaction speed! Click spaceships as fast as possible in 60 seconds</p>
+                    <div class="difficulty-badge">Fast-paced</div>
                 </div>
-                
+
                 <div class="game-card" onclick="showGame('pictures')">
                     <span class="game-icon">🖼️</span>
-                    <h3 class="game-title">Picture Memory</h3>
-                    <p class="game-description">Memorize shown pictures and select them from the list</p>
+                    <h3 class="game-title">Visual Memory</h3>
+                    <p class="game-description">Train your visual memory by memorizing emoji patterns and selecting them correctly</p>
+                    <div class="difficulty-badge">Memory Focus</div>
                 </div>
                 
                 <div class="game-card" onclick="showGame('pairs')">
                     <span class="game-icon">🃏</span>
-                    <h3 class="game-title">Matching Pairs</h3>
-                    <p class="game-description">Find all pairs of identical cards</p>
+                    <h3 class="game-title">Memory Pairs</h3>
+                    <p class="game-description">Classic matching game! Find all pairs while improving your concentration</p>
+                    <div class="difficulty-badge">Strategy</div>
                 </div>
                 
                 <div class="game-card" onclick="showGame('sequence')">
                     <span class="game-icon">🔢</span>
-                    <h3 class="game-title">Sequences</h3>
-                    <p class="game-description">Memorize and reproduce the number sequence</p>
+                    <h3 class="game-title">Number Sequences</h3>
+                    <p class="game-description">Challenge your working memory with increasingly complex number patterns</p>
+                    <div class="difficulty-badge">Progressive</div>
                 </div>
-                
+
                 <div class="game-card" onclick="showGame('difference')">
                     <span class="game-icon">🔍</span>
-                    <h3 class="game-title">Find the Change</h3>
-                    <p class="game-description">Find the changed item among others</p>
+                    <h3 class="game-title">Spot the Change</h3>
+                    <p class="game-description">Sharpen your attention to detail by finding what changed in the scene</p>
+                    <div class="difficulty-badge">Attention</div>
                 </div>
             </div>
         </div>
@@ -380,7 +565,7 @@
             <div class="timer">Time: <span id="reaction-timer">60</span><span> s</span></div>
             <div class="reaction-area" id="reaction-area"></div>
             <button class="start-btn" id="reaction-start-btn" onclick="startReactionGame()">Start game</button>
-        </div>
+                    </div>
 
         <!-- Запоминание картинок -->
         <div id="pictures-game" class="game-screen">
@@ -390,11 +575,11 @@
                 <button class="difficulty-btn active" onclick="setPicturesDifficulty('easy')">Easy (4 items)</button>
                 <button class="difficulty-btn" onclick="setPicturesDifficulty('medium')">Medium (6 items)</button>
                 <button class="difficulty-btn" onclick="setPicturesDifficulty('hard')">Hard (8 items)</button>
-            </div>
+                </div>
             <div class="score">Level: <span id="pictures-level">1</span></div>
             <div class="game-area" id="pictures-area"></div>
             <button class="start-btn" id="pictures-start-btn" onclick="startPicturesGame()">Start game</button>
-        </div>
+            </div>
 
         <!-- Парочки -->
         <div id="pairs-game" class="game-screen">
@@ -414,10 +599,10 @@
             <div class="input-area">
                 <input type="text" class="sequence-input" id="sequence-input" placeholder="Enter the sequence">
                 <button class="submit-btn" onclick="checkSequence()">Check</button>
-            </div>
+                    </div>
             <button class="start-btn" id="sequence-start-btn" onclick="startSequenceGame()">Start game</button>
-        </div>
-
+                </div>
+                
         <!-- Найди отличие -->
         <div id="difference-game" class="game-screen">
             <button class="back-btn" onclick="showMainMenu()">← Back to menu</button>
@@ -425,19 +610,94 @@
             <div class="score">Level: <span id="difference-level">1</span></div>
             <div class="game-area" id="difference-area"></div>
             <button class="start-btn" id="difference-start-btn" onclick="startDifferenceGame()">Start game</button>
+            </div>
         </div>
-    </div>
 
     <script>
-        // Глобальные переменные для игр
+        // Global variables for games
         let currentGame = null;
         let gameStates = {
-            reaction: { score: 0, timeLeft: 60, running: false, timer: null },
+            reaction: { score: 0, timeLeft: 60, running: false, timer: null, streak: 0 },
             pictures: { level: 1, difficulty: 'easy', shownPictures: [], allPictures: [] },
             pairs: { attempts: 0, flippedCards: [], matchedPairs: 0, cards: [] },
             sequence: { level: 1, sequence: [], input: '', length: 3 },
             difference: { level: 1, objects: [], changedIndex: -1, phase: 'show' }
         };
+
+        // Global stats
+        let globalStats = {
+            totalGames: 0,
+            bestScore: 0,
+            currentStreak: 0,
+            bestStreak: 0
+        };
+
+        // Load stats from localStorage
+        function loadStats() {
+            const saved = localStorage.getItem('memoryMasterStats');
+            if (saved) {
+                globalStats = { ...globalStats, ...JSON.parse(saved) };
+            }
+            updateStatsDisplay();
+        }
+
+        // Save stats to localStorage
+        function saveStats() {
+            localStorage.setItem('memoryMasterStats', JSON.stringify(globalStats));
+        }
+
+        // Update stats display
+        function updateStatsDisplay() {
+            document.getElementById('total-games').textContent = globalStats.totalGames;
+            document.getElementById('best-score').textContent = globalStats.bestScore;
+            document.getElementById('streak').textContent = globalStats.currentStreak;
+        }
+
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = particle.style.height = Math.random() * 4 + 2 + 'px';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Add celebration effects
+        function showCelebration() {
+            const celebration = document.createElement('div');
+            celebration.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: 1000;
+                background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+                animation: celebration 2s ease-out forwards;
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes celebration {
+                    0% { opacity: 0; transform: scale(0.5); }
+                    50% { opacity: 1; transform: scale(1.1); }
+                    100% { opacity: 0; transform: scale(1.5); }
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(celebration);
+            
+            setTimeout(() => {
+                celebration.remove();
+                style.remove();
+            }, 2000);
+        }
 
         // Показ главного меню
         function showMainMenu() {
@@ -535,7 +795,33 @@
             document.getElementById('reaction-start-btn').textContent = 'Play again';
             document.getElementById('reaction-area').innerHTML = '';
             
-            alert('Game over! Your score: ' + game.score);
+            // Update global stats
+            globalStats.totalGames++;
+            if (game.score > globalStats.bestScore) {
+                globalStats.bestScore = game.score;
+                showCelebration();
+            }
+            if (game.score >= 20) {
+                globalStats.currentStreak++;
+                if (globalStats.currentStreak > globalStats.bestStreak) {
+                    globalStats.bestStreak = globalStats.currentStreak;
+                }
+            } else {
+                globalStats.currentStreak = 0;
+            }
+            
+            saveStats();
+            updateStatsDisplay();
+            
+            // Show enhanced results
+            const result = document.createElement('div');
+            result.className = 'result success';
+            result.innerHTML = `
+                <h3>🎉 Game Complete!</h3>
+                <p>Score: <strong>${game.score}</strong></p>
+                <p>${game.score >= 30 ? '🏆 Excellent!' : game.score >= 20 ? '⭐ Great job!' : '💪 Keep practicing!'}</p>
+            `;
+            document.getElementById('reaction-area').appendChild(result);
         }
 
         // ========== ЗАПОМИНАНИЕ КАРТИНОК ==========
@@ -836,6 +1122,15 @@
                 }, 2000);
             }
         }
+
+        // Initialize the app
+        function init() {
+            loadStats();
+            createParticles();
+        }
+
+        // Start the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
